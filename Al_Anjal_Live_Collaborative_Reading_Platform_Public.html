@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Al-Anjal School | English Language Department</title>
+<style>
+:root{--navy:#102b4e;--blue:#1766a6;--sky:#eaf5ff;--gold:#e6b84d;--ink:#213247;--muted:#63758b;--paper:#f3f7fb;--white:#fff;--green:#16845b;--red:#bd3545;--purple:#6953a8;--line:#dce6f0}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "Segoe UI",Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.school-head{background:linear-gradient(120deg,#092345,#155d91 62%,#16859a);color:white;padding:25px 18px 30px;text-align:center}
+.school-head img{width:190px;max-width:48vw;height:auto;background:white;border-radius:16px;padding:8px;box-shadow:0 8px 28px #00152b55}
+.school-name{font-size:clamp(27px,4vw,42px);font-weight:900;letter-spacing:.02em;margin:10px 0 0}
+.dept{font-size:clamp(16px,2.4vw,23px);font-weight:800;color:#ffe4a2;letter-spacing:.13em;text-transform:uppercase}
+.teacher{margin-top:8px;font-size:17px;color:#e6f6ff;font-weight:700}
+main{max-width:1180px;margin:25px auto;padding:0 18px 60px}.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 28px #173a5b0b;margin-bottom:17px}
+h1,h2,h3{color:var(--navy);line-height:1.2;margin-top:0}.cover-title{text-align:center;font-size:30px;margin-bottom:8px}
+.muted,.small{color:var(--muted)}.small{font-size:12px}
+.class-grid,.icon-grid,.groups-grid,.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.class-card{border:0;border-radius:20px;padding:24px;min-height:155px;color:white;text-align:left;background:linear-gradient(135deg,#155c9b,#2098a5);box-shadow:0 10px 22px #173a5b1c}
+.class-card:nth-child(2){background:linear-gradient(135deg,#57469c,#8d63b8)}.class-card:nth-child(3){background:linear-gradient(135deg,#a25a26,#df9c39)}.class-card:nth-child(4){background:linear-gradient(135deg,#176d59,#34a58a)}
+.class-card .grade{font-size:37px;font-weight:950;display:block}.class-card small{font-size:13px;color:#f2f7ff}
+.btn{border:0;border-radius:11px;padding:10px 15px;background:#eaf1f8;color:var(--navy);font-weight:800}
+.btn.primary{background:#1766a6;color:white}.btn.gold{background:#f1c45e;color:#26354a}
+input,select,textarea{width:100%;border:1px solid #d1dce8;border-radius:11px;padding:11px 12px;background:white;color:var(--ink)}
+textarea{min-height:100px;resize:vertical}.field{margin:13px 0}.field label{display:block;font-weight:800;margin-bottom:6px}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.row>*{flex:1}
+.objectives{display:grid;grid-template-columns:1fr 1fr;gap:12px}.objective{background:#f1f7fd;border-radius:13px;padding:13px}
+.agenda{margin:0;padding-left:22px}.agenda li{padding:3px 0}
+.lesson-heading{background:linear-gradient(110deg,#112d50,#1b6697);color:white;padding:24px;border-radius:18px;margin-bottom:16px}
+.lesson-heading h1{color:white;font-size:clamp(27px,4vw,40px);margin:0 0 5px}.lesson-heading p{margin:0;color:#dcefff}
+.step-tile{background:white;border:1px solid var(--line);border-radius:17px;padding:17px;text-align:left;min-height:132px;position:relative}
+.step-tile .emoji{font-size:29px;display:block;margin-bottom:8px}.step-tile strong{display:block;color:var(--navy)}.step-tile small{color:var(--muted)}
+.step-tile.locked{opacity:.5;cursor:not-allowed;background:#f2f4f7}.step-tile.done{border:2px solid #39a67a;background:#f0fbf5}
+.student-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;align-items:start}
+.group-side{position:sticky;top:12px}.group-card{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0;background:#fbfdff}
+.group-card.active{border:2px solid var(--blue);background:#edf7ff}.member{padding:5px 0;border-bottom:1px solid #edf1f5;font-size:13px}
+.activity-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.timer{background:#fff4d6;border:1px solid #f1d58d;color:#674c0c;border-radius:12px;padding:10px 14px;font-weight:900;font-variant-numeric:tabular-nums}
+.timer.warning{background:#fff0f0;border-color:#e8a7ac;color:#a32532;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.65}}
+.progress{height:9px;background:#e7edf4;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#1766a6,#39a68a);width:0}
+.reading{white-space:pre-line;line-height:1.85;background:#fbfdff;border:1px solid var(--line);border-radius:14px;padding:17px;max-height:490px;overflow:auto}
+.note-tools{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}.tag{display:inline-block;border-radius:99px;padding:4px 10px;background:#eaf2fa;color:#28537c;font-size:12px;font-weight:800}
+.feedback{padding:12px;border-radius:12px;background:#eaf8f1;color:#116345;margin:10px 0}.feedback.bad{background:#fff0f0;color:#a12e3a}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:13px;background:#f0f5fa;border-radius:13px}.stat b{display:block;font-size:25px;color:var(--navy)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;color:var(--muted);text-transform:uppercase}
+.hidden{display:none!important}.warning-banner{padding:12px;border-radius:12px;background:#fff2d7;color:#76520b;font-weight:800}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:12px}
+@media(max-width:760px){.class-grid,.icon-grid,.groups-grid,.choice-grid,.objectives{grid-template-columns:1fr}.student-layout{grid-template-columns:1fr}.group-side{position:static}.statgrid{grid-template-columns:repeat(2,1fr)}main{padding:0 12px 40px}}
+
+/* CREATIVE STUDENT-FRIENDLY REDESIGN */
+:root{--navy:#172554;--blue:#2563eb;--sky:#eff6ff;--gold:#fbbf24;--ink:#17233d;--muted:#52627a;--paper:#f4f7ff;--white:#fff;--green:#059669;--red:#e11d48;--purple:#7c3aed;--line:#dbe4f2}
+body{font-size:17px;line-height:1.7;background:radial-gradient(circle at 8% 5%,#e0f2fe 0,transparent 28%),radial-gradient(circle at 92% 15%,#f3e8ff 0,transparent 25%),#f6f8ff}
+.school-head{padding:34px 18px 38px;background:linear-gradient(125deg,#111c4e 0%,#2458a6 52%,#0f9a9a 100%);position:relative;overflow:hidden}
+.school-head:before,.school-head:after{content:"";position:absolute;border-radius:50%;background:#ffffff12;pointer-events:none}.school-head:before{width:260px;height:260px;left:-80px;top:-110px}.school-head:after{width:340px;height:340px;right:-110px;bottom:-230px}
+.school-head img{width:205px;border-radius:22px;position:relative;z-index:1}.school-name{font-size:clamp(30px,4.3vw,46px);text-shadow:0 3px 12px #071b4380}.dept{font-size:clamp(18px,2.5vw,25px)}.teacher{font-size:19px}
+main{max-width:1280px;margin:30px auto;padding:0 22px 70px}.panel{border:1px solid #dce6f5;border-radius:24px;padding:27px;box-shadow:0 14px 36px #1e3a8a12;margin-bottom:21px;background:#ffffffed}
+h1,h2,h3{letter-spacing:-.02em}h2{font-size:clamp(25px,3vw,32px)}h3{font-size:22px}.cover-title{font-size:clamp(30px,4vw,39px);background:linear-gradient(90deg,#1d4ed8,#7c3aed,#0891b2);background-clip:text;-webkit-background-clip:text;color:transparent}
+.muted{font-size:16px}.small{font-size:14px}.class-grid,.icon-grid,.groups-grid,.choice-grid{gap:18px}.class-card{min-height:175px;padding:27px;border-radius:24px;transition:transform .2s,box-shadow .2s;box-shadow:0 13px 26px #17255420}.class-card:hover,.step-tile:hover,.group-card:hover{transform:translateY(-3px);box-shadow:0 16px 30px #17255422}.class-card .grade{font-size:43px}.class-card small{font-size:15px}
+.btn{font-size:16px;padding:12px 18px;border-radius:14px;transition:transform .15s,filter .15s}.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}.btn.primary{background:linear-gradient(120deg,#2563eb,#0d9488);box-shadow:0 7px 15px #2563eb28}.btn.gold{background:linear-gradient(120deg,#fbbf24,#fb923c);color:#422006}
+input,select,textarea{font-size:17px;padding:13px 15px;border-radius:14px}textarea{min-height:125px}.field label{font-size:16px}.objective{padding:17px;border-radius:17px;font-size:17px;background:linear-gradient(135deg,#eff6ff,#f5f3ff)}.agenda li{padding:5px 0;font-size:17px}
+.lesson-heading{padding:30px;border-radius:23px;background:linear-gradient(115deg,#172554,#1d4ed8 58%,#0891b2);box-shadow:0 12px 26px #1e40af24}.lesson-heading h1{font-size:clamp(30px,4vw,43px)}.lesson-heading p{font-size:17px}
+.step-tile{padding:21px;border-radius:20px;min-height:150px;box-shadow:0 7px 18px #1725540c;transition:.2s}.step-tile .emoji{font-size:35px}.step-tile strong{font-size:18px}.step-tile small{font-size:14px}.step-tile.done{background:linear-gradient(135deg,#ecfdf5,#f0fdfa);border:2px solid #34d399}
+.group-card{border:2px solid #e1e8f5;border-radius:19px;padding:18px;margin:0;background:linear-gradient(145deg,#fff,#f5f8ff);color:var(--ink);text-align:left;box-shadow:0 7px 18px #1725540d}.group-card.active{border-color:#2563eb;background:linear-gradient(145deg,#eff6ff,#eef2ff);box-shadow:0 0 0 4px #2563eb18}.group-card>b{font-size:19px;color:#1e40af}.group-card .small{font-size:14px}.member{font-size:15px;padding:7px 0;border-color:#e7edf7}
+.activity-head h2{font-size:clamp(26px,3.2vw,35px)}.activity-head p{font-size:16px}.timer{font-size:20px;padding:12px 17px;border-radius:15px}.reading{font-size:18px;line-height:1.95;padding:23px;border-radius:19px;background:linear-gradient(145deg,#fff,#f8fbff);max-height:560px}.tag{font-size:13px;padding:6px 12px;background:#e0edff;color:#1e40af}.question{font-size:17px;padding:18px;border-radius:17px;background:#f5f7ff;border:1px solid #e0e7ff;margin:14px 0}.feedback,.warning-banner{font-size:16px;padding:15px;border-radius:15px}.progress{height:12px;background:#e5eaf5}.progress i{background:linear-gradient(90deg,#2563eb,#8b5cf6,#10b981)}
+.stat{padding:18px;border-radius:17px;background:linear-gradient(135deg,#eff6ff,#f5f3ff)}.stat b{font-size:30px}table{font-size:14px}th{font-size:12px}th,td{padding:11px}footer{font-size:14px;padding:30px}
+@media(max-width:760px){body{font-size:16px}.panel{padding:20px}.school-head{padding:27px 15px}.reading{font-size:17px;padding:18px}}
+</style>
+</head>
+<body>
+<header class="school-head">
+ <img src="data:image/png;base64,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" alt="Al-Anjal School logo">
+ <div class="school-name">AL-ANJAL SCHOOL</div>
+ <div class="dept">English Language Department</div>
+ <div class="teacher">Teacher: Mr. Mustafa Mahmoud</div>
+</header>
+<main>
+<section id="cover">
+ <div class="panel">
+  <h1 class="cover-title">WELCOME TO THE ENGLISH READING HUB</h1>
+  <p class="muted" style="text-align:center">Choose your class to enter your learning space.</p>
+  <div class="class-grid">
+   <button class="class-card" onclick="selectClass('10A')"><span class="grade">10 A</span><small>Grade 10 A-Level · Reading Room</small></button>
+   <button class="class-card" onclick="selectClass('10C')"><span class="grade">10 C</span><small>Grade 10 C · Reading Room</small></button>
+   <button class="class-card" onclick="selectClass('11A')"><span class="grade">11 A</span><small>Grade 11 A · Class Space</small></button>
+   <button class="class-card" onclick="selectClass('12A')"><span class="grade">12 A</span><small>Grade 12 A · Class Space</small></button>
+  </div>
+ </div>
+ <div class="panel">
+  <h3>📘 Class access</h3>
+  <p class="muted">Grade 10 A and 10 C have the student names from the class lists already supplied. Grade 11 A and 12 A are ready as class spaces; their student lists still need to be added by the teacher before students can sign in.</p>
+ </div>
+</section>
+
+<section id="classPage" class="hidden">
+ <div class="panel">
+  <div class="row"><div><span class="tag" id="classBadge">CLASS</span><h2 id="classTitle">Class Reading Room</h2><p class="muted">You are now in your class reading room. Start with the objectives, then join your group.</p></div><button class="btn" onclick="backCover()">← School front page</button></div>
+  <p class="muted">Welcome! Your reading session is ready. Review the objectives, then join your group to begin the activities.</p>
+ </div>
+ <div id="sessionHome" class="hidden">
+  <div class="lesson-heading">
+   <span class="tag" style="background:#ffffff22;color:white">GRADE 10 · A-LEVEL ENGLISH</span>
+   <h1>THE LAST LIGHT</h1>
+   <p>TRAINING THE BRAIN TO STAY CALM · A TWO-TEXT READING JOURNEY</p>
+   <p style="margin-top:8px">40-MINUTE ONLINE READING SESSION · Read • Notice • Think • Support your ideas with evidence</p>
+  </div>
+  <div class="panel">
+   <h2>Today’s Objectives</h2>
+   <div class="objectives">
+    <div class="objective">🎯 Explain how Sami responds during the storm.</div>
+    <div class="objective">🧠 Identify the main idea of an informational text.</div>
+    <div class="objective">🔎 Use details from both texts as evidence.</div>
+   </div>
+   <h3 style="margin-top:18px">Our Agenda</h3>
+   <ol class="agenda">
+    <li>Think, ink, pair & share</li><li>Predict and choose a question</li><li>Read, annotate & infer vocabulary</li><li>Choose a task</li><li>Exit ticket</li>
+   </ol>
+   <p class="small">Success looks like: I can make a clear point and prove it with a relevant detail from the text.</p>
+  </div>
+  <div class="panel">
+   <div class="row"><div><h2>Choose your group</h2><p class="muted">Your class is arranged into balanced teams of 3–4 students. No team has fewer than three students. Choose your group to open its shared workspace; all nine activities are inside.</p></div><span class="tag" id="groupStatus">GROUPS</span></div>
+   <div class="student-layout">
+    <div><div class="groups-grid" id="groupsGrid"></div></div>
+    <aside class="group-side panel" style="margin:0;padding:15px">
+     <h3>Your group members</h3><div id="myGroupNames" class="muted">Choose your group card.</div>
+    </aside>
+   </div>
+  </div>
+  <div id="stepsArea" class="panel hidden">
+   <div class="row"><div><h2>📍 Your nine-step reading journey</h2><p class="muted">Work together inside your group workspace. Complete the nine activities in order; the next step opens after submission.</p></div><span class="tag" id="studentStepProgress">0 / 9 completed</span></div>
+   <div class="progress"><i id="studentProgress"></i></div>
+   <div class="icon-grid" id="stepGrid" style="margin-top:15px"></div>
+   <div id="activityPanel" class="panel hidden" style="margin-top:17px"></div>
+  </div>
+ </div>
+</section>
+
+<section id="teacherPage" class="hidden">
+ <div class="panel">
+  <div class="row"><div><span class="tag">TEACHER CONTROL CENTRE</span><h2>Participation & Response Report</h2><p class="muted">Review submitted responses and work-in-progress drafts from every group, activity by activity.</p></div><button class="btn primary" onclick="exportReport()">⬇ Export CSV report</button></div>
+  <div class="statgrid"><div class="stat"><b id="totalStudents">0</b><span>Students listed</span></div><div class="stat"><b id="submittedCount">0</b><span>Participating</span></div><div class="stat"><b id="pendingCount">0</b><span>No submissions</span></div><div class="stat"><b id="quizCount">0</b><span>Quizzes submitted</span></div></div>
+ </div>
+ <div class="panel">
+  <h3>Class student lists</h3><p class="small">One student per line. Grade 10A and 10C names are already loaded. Add the missing Grade 11A and 12A rosters here.</p>
+  <div class="groups-grid" id="rosterEditors"></div><button class="btn primary" onclick="saveRosters()">Save class lists & randomize groups</button><span class="small" id="rosterMsg"></span>
+ </div>
+ <div class="panel"><h3>Activity-by-activity participation</h3><p class="small">😊 = submitted this step · 😠 = not submitted this step yet.</p><div style="overflow:auto"><table><thead><tr><th>Student</th><th>Class</th><th>Group</th><th>Step 1</th><th>Step 2</th><th>Step 3</th><th>Step 4</th><th>Step 5</th><th>Step 6</th><th>Step 7</th><th>Step 8</th><th>Step 9</th></tr></thead><tbody id="participationTable"></tbody></table></div></div>
+ <div class="panel"><h3>Student answers & teacher feedback</h3><div id="teacherResponses">No responses yet.</div></div>
+ <div class="panel"><h3>Live classroom connection</h3><p>Connected to the shared Al-Anjal classroom database. Group drafts and submissions are synchronized across devices.</p></div>
+</section>
+</main>
+<footer>AL-ANJAL SCHOOL · ENGLISH LANGUAGE DEPARTMENT · READ WITH COURAGE, THINK WITH CARE</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const texts = {
+ A:`The storm arrived earlier than the forecast had promised. By the time the school bus reached the narrow road beside the hills, rain was striking the windows so hard that the world outside looked like a blurred painting. Sami sat near the back, holding a small box of electronic parts for the science exhibition. He had spent three weeks building a model lighthouse, and he was determined to deliver it before the judging began the next morning.
+
+A sudden flash lit the road. The driver slowed, but a tree branch fell across the lane with a crack that sounded like a door being slammed. The bus stopped. For a few seconds, nobody spoke. Then several students began asking questions at once. The driver tried his phone, but there was no signal. He explained that the bus was safe where it stood, yet the road ahead was blocked and the rain was getting heavier.
+
+Sami felt his breathing become quick and shallow. His hands tightened around the box. He remembered a lesson from his grandfather, who had once worked as a mountain guide: when fear takes over, do not try to solve the whole problem at once. Find the next useful action. Sami looked around. The emergency light above the front seats was still glowing, but the driver's torch had slipped beneath a seat.
+
+“I can reach it,” Sami said. His voice sounded smaller than he wanted it to. He moved carefully along the aisle, found the torch and handed it to the driver. The driver used it to check the bus and then asked two older students to help keep everyone away from the wet road. Sami suggested that the students move their bags away from the aisle so nobody would trip if they needed to leave the bus.
+
+A few minutes later, a second problem appeared. Water began running down the slope beside the road, carrying small stones with it. One student started to cry. Sami wanted to tell her that everything would be fine, but he knew he could not promise that. Instead, he sat beside her and asked her to count five slow breaths with him. He counted too, although his own heart was still beating hard.
+
+The driver finally reached the school by radio. A maintenance team was on its way, and another bus would collect the students if the road remained blocked. While they waited, Sami noticed that the emergency light had begun to flicker. He opened his model's box and took out a spare battery pack. It was meant for the lighthouse, but the driver connected it to the small lamp near the door. The light steadied, making the bus feel less like a dark island in the rain.
+
+When help arrived, the students left in pairs and followed the adults to the waiting bus. Sami's model was damp around the edges, and one of its paper windows had torn. He looked at it with disappointment. Then the girl he had helped stopped beside him. “I wasn't as scared when you counted with me,” she said. Sami glanced back at the little lamp glowing by the door. He had not stopped being afraid during the storm. He had simply found something useful to do while the fear was there.`,
+ B:`Fear is often treated as an enemy, but it is one of the body's important warning systems. When the brain detects a possible threat, it sends messages that prepare the body to respond. The heart may beat faster, breathing may become quicker, and muscles may tighten. These changes can help a person react rapidly to danger. However, the same response can make it difficult to think carefully when a situation requires patience rather than immediate action.
+
+A small structure deep inside the brain, called the amygdala, helps notice emotional signals and identify possible danger. It can react before a person has time to examine all the facts. This speed is useful if a car suddenly moves into the road. It is less helpful when the threat is uncertain, such as speaking to a large audience or hearing an unfamiliar noise at night. In these situations, the brain may respond as if the danger were greater than it really is.
+
+The brain does not work alone. Another region, the prefrontal cortex, helps people plan, compare choices and control their reactions. When a person pauses, takes a steady breath and considers what is actually happening, this region can help balance the alarm signals. The goal is not to switch fear off. It is to give careful thinking enough time to guide the next action.
+
+People can practise this skill in ordinary situations. An athlete might imagine the first moments of a competition and rehearse a calm routine. A student who feels nervous before a presentation might practise speaking to a small group before addressing the whole class. Repeated, manageable practice can teach the brain that a challenging situation is not always a dangerous one. Preparation also makes useful actions easier to remember when pressure rises.
+
+There are limits to these techniques. Slow breathing and practice may help with everyday stress, but they cannot make an unsafe situation safe. If a person faces a real emergency, the first priority is to follow reliable safety instructions and seek help. Nor does one calming method work equally well for everyone. Some people benefit from movement, while others prefer quiet breathing or talking with someone they trust.
+
+Learning to manage fear, then, is not about becoming fearless. Fear provides information, but it does not need to make every decision. By recognising the body's warning signs, checking the facts and choosing a suitable response, people can use fear as a signal instead of allowing it to control them.`
+};
+const quiz = [
+{q:'In paragraph 1, “looked like a blurred painting” mainly helps the reader understand that —',o:['Sami could not remember the route to school.','The heavy rain made it difficult to see clearly.','The bus windows were covered with colourful pictures.','The students were looking at a painting competition.'],a:1},
+{q:'Which statement best describes how Sami changes during the story?',o:['He moves from excitement about his project to anger at the driver.','He moves from fear and uncertainty to taking calm, helpful action.','He moves from confidence to refusing to help the other students.','He moves from disappointment to believing that the storm was enjoyable.'],a:1},
+{q:'Which detail can the reader know because the story is told from a perspective close to Sami’s thoughts?',o:['The driver tried to use his phone.','The rain was striking the windows.','Sami wanted to reassure the crying student but knew he could not make a promise.','A maintenance team was on its way.'],a:2},
+{q:'In paragraph 3, “shallow” most nearly means —',o:['Not deep or full.','Unusually loud.','Slow and relaxed.','Painful and uneven.'],a:0},
+{q:'Which sentence best expresses the central idea of the article?',o:['Fear is harmful and should be removed from the brain.','The amygdala is the only part of the brain involved in decision-making.','People can learn to manage fear by understanding it and practising thoughtful responses.','Athletes experience fear more often than students do.'],a:2},
+{q:'How does the author organize paragraphs 2 and 3?',o:['By describing two brain regions and explaining their different roles.','By presenting a problem and listing several unrelated historical events.','By comparing two sports and ranking them by difficulty.','By giving instructions in the exact order of a medical procedure.'],a:0},
+{q:'Which detail best supports the author’s point that practice can help people respond more calmly?',o:['The heart may beat faster when the brain detects danger.','The amygdala is located deep inside the brain.','A student can practise speaking to a small group before addressing the whole class.','Some people prefer talking with someone they trust.'],a:2},
+{q:'Why might the brain’s quick fear response be unhelpful when a student hears an unfamiliar noise at night?',o:['It prevents the student from hearing any other sounds.','It may treat an uncertain situation as more dangerous than it really is.','It immediately removes the body’s ability to move.','It makes the prefrontal cortex stop working permanently.'],a:1}
+];
+const activityDefs = [
+ {id:'warmup',icon:'💭',title:'Think – Ink – Pair – Share',desc:'Connect to the topic · PowerPoint slide 3'},
+ {id:'predict',icon:'🔮',title:'Look at the title: The Last Light',desc:'Predict from the title · Slide 4'},
+ {id:'question',icon:'❓',title:'Choose a question to carry through the reading',desc:'Choose one investigation question · Slide 5'},
+ {id:'story',icon:'📖',title:'Read the whole story: The Last Light',desc:'Read, annotate and discuss · Slides 6–10'},
+ {id:'meaning',icon:'🔍',title:'Make meaning & investigate vocabulary',desc:'Theme, character, point of view and five words · Slides 11–12'},
+ {id:'article',icon:'🧠',title:'Read: Training the Brain to Stay Calm',desc:'Read, annotate and infer · Slides 13–15'},
+ {id:'connect',icon:'🔗',title:'Connect the two texts & read between the lines',desc:'Compare, infer and support ideas · Slides 16–17'},
+ {id:'choice',icon:'🎨',title:'Choose your differentiated group task',desc:'Evidence map, advice message or mini interview · Slides 18–21'},
+ {id:'final',icon:'🌟',title:'Exit ticket & reading quiz',desc:'Reflect and complete the attached quiz · Slides 22–23'}
+];
+let currentClass='',currentStudent='',currentGroup='',timerInterval=null,remaining=300;
+// Public website build: do not embed student names, rosters, or PINs in client source.
+// Student rosters and PIN hashes are stored only in the protected Supabase database.
+localStorage.removeItem('anjalReadingHub');
+let data={rosters:{},responses:{},feedback:{},groups:{},groupVersion:{},checkins:{}};
+function save(){localStorage.setItem('anjalReadingHub',JSON.stringify(data))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function studentKey(){return currentClass+'|group-'+currentGroup}
+function selectClass(c){
+ currentClass=c;currentStudent='';currentGroup='';
+ document.getElementById('cover').classList.add('hidden');
+ document.getElementById('teacherPage').classList.add('hidden');
+ document.getElementById('classPage').classList.remove('hidden');
+ document.getElementById('classBadge').textContent='GRADE '+c;
+ document.getElementById('classTitle').textContent='Grade '+c+' · Class Reading Room';
+ document.getElementById('sessionHome').classList.remove('hidden');
+ document.getElementById('stepsArea').classList.add('hidden');
+ document.getElementById('activityPanel').classList.add('hidden');
+ document.getElementById('myGroupNames').innerHTML='Choose a group to open its shared workspace.';
+ makeGroups(currentClass);renderGroups();
+ document.getElementById('sessionHome').scrollIntoView({behavior:'smooth'});
+}
+function backCover(){
+ stopTimer();currentGroup='';
+ document.getElementById('classPage').classList.add('hidden');
+ document.getElementById('cover').classList.remove('hidden');
+}
+function shuffle(a){let x=[...a];for(let i=x.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function makeGroups(c){let roster=data.rosters[c]||[];let signature=roster.join('|')+'|balanced-teams-v2';if(data.groupVersion[c]===signature&&data.groups[c])return;let shuffled=shuffle(roster),count=Math.ceil(shuffled.length/4),groups=Array.from({length:count},()=>[]);shuffled.forEach((name,i)=>groups[i%count].push(name));data.groups[c]=groups;data.groupVersion[c]=signature;save()}
+function renderGroups(){
+ let groups=data.groups[currentClass]||[];
+ let html=groups.map((g,i)=>`<button class="group-card ${currentGroup===String(i)?'active':''}" onclick="chooseGroup('${i}')"><b>👥 Group ${i+1}</b><div class="small">${g.length} student${g.length===1?'':'s'} · Join this group</div>${g.map(n=>`<div class="member">${esc(n)}</div>`).join('')}<div class="small" style="margin-top:8px;font-weight:800">Open group workspace →</div></button>`).join('');
+ document.getElementById('groupsGrid').innerHTML=html||'<p class="muted">No student list has been added for this class yet. The teacher can add the class roster in the teacher control centre.</p>';
+ document.getElementById('groupStatus').textContent=groups.length+' GROUPS';
+}
+function chooseGroup(i){
+ let g=(data.groups[currentClass]||[])[Number(i)]||[];
+ if(!g.length)return;
+ currentGroup=String(i);
+ document.getElementById('myGroupNames').innerHTML=
+  '<b>👥 Group '+(Number(i)+1)+' · Members</b>'+
+  g.map(n=>`<div class="member">${esc(n)}</div>`).join('')+
+  '<p class="small">Your group workspace is open. Complete the activities together in order.</p>';
+ document.getElementById('stepsArea').classList.remove('hidden');
+ document.getElementById('activityPanel').classList.add('hidden');
+ renderGroups();
+ renderSteps();
+ document.getElementById('stepsArea').scrollIntoView({behavior:'smooth'});
+}
+function response(){return data.responses[studentKey()]||(data.responses[studentKey()]={class:currentClass,student:'Group '+(Number(currentGroup)+1),group:currentGroup,activities:{},quiz:null})}
+function renderSteps(){let r=data.responses[studentKey()]||{activities:{}};let completed=Object.keys(r.activities||{}).length;document.getElementById('studentStepProgress').textContent=completed+' / 9 completed';document.getElementById('studentProgress').style.width=(completed/9*100)+'%';let firstMissing=activityDefs.findIndex(d=>!r.activities?.[d.id]);if(firstMissing<0)firstMissing=9;document.getElementById('stepGrid').innerHTML=activityDefs.map((d,i)=>{let done=!!r.activities?.[d.id],locked=i>firstMissing;return `<button class="step-tile ${done?'done':''} ${locked?'locked':''}" ${locked?'disabled':''} onclick="openStep('${d.id}')"><span class="emoji">${done?'✅':d.icon}</span><strong>${i+1}. ${d.title}</strong><small>${d.desc}</small><small style="display:block;margin-top:8px">${done?'Submitted ✓':locked?'🔒 Finish the previous step':'⏱ 5-minute activity'}</small></button>`}).join('')}
+function field(label,placeholder='Type your response here...'){return `<div class="field"><label>${label}</label><textarea id="answerBox" placeholder="${placeholder}" oninput="saveGroupDraft()"></textarea></div>`}
+function startTimer(){stopTimer();remaining=300;paintTimer();timerInterval=setInterval(()=>{remaining--;paintTimer();if(remaining===60){document.getElementById('timerWarning').innerHTML='<div class="warning-banner">⚠️ One minute left! Please finish typing and submit your group response.</div>'}if(remaining<=0){stopTimer();document.getElementById('timerWarning').innerHTML='<div class="warning-banner">⏰ Time is up. Please submit your response now, or ask the teacher for extra time.</div>'}},1000)}
+function paintTimer(){let el=document.getElementById('timerClock');if(!el)return;let m=Math.floor(remaining/60),s=remaining%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.classList.toggle('warning',remaining<=60)}
+function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}}
+function openStep(id){let idx=activityDefs.findIndex(d=>d.id===id),r=data.responses[studentKey()]||{activities:{}};let firstMissing=activityDefs.findIndex(d=>!r.activities?.[d.id]);if(firstMissing<0)firstMissing=9;if(idx>firstMissing)return;stopTimer();let def=activityDefs[idx],group=(data.groups[currentClass]||[])[Number(currentGroup)]||[];let p=document.getElementById('activityPanel');p.classList.remove('hidden');let content='';
+if(id==='warmup')content=`<h2>💭 Think – Ink – Pair – Share</h2><p>Imagine you are in a difficult situation. You feel afraid, but other people need your help. What could you do?</p><p><b>THINK:</b> Decide what you might do. <b>INK:</b> Write one idea. <b>PAIR / SHARE:</b> Discuss with your group.</p><span class="tag">Sentence starter: “I think I would … because …”</span>${field('Write your own idea and your group’s best shared idea.','I think I would... because...')}
+<div class="note-tools"><span class="tag">! Notice</span><span class="tag">? Question</span><span class="tag">→ Connect</span></div>`;
+if(id==='predict')content=`<h2>🔮 Look at the title: THE LAST LIGHT</h2><p><b>A storm. A school bus. A small light in the dark.</b></p><p>What might the “last light” represent? What kind of challenge might the main character face?</p>${field('Write a prediction and explain the clue from the title.','I predict that... because the title suggests...')}`;
+if(id==='question')content=`<h2>❓ Choose a question to carry through the reading</h2><p>Pick ONE question. Keep it in mind as you read.</p><div class="question"><label><input type="radio" name="focus" value="1" checked> <b>Question 1:</b> How does Sami move from fear to useful action?</label></div><div class="question"><label><input type="radio" name="focus" value="2"> <b>Question 2:</b> How can the brain’s fear response help us — and sometimes mislead us?</label></div><div class="question"><label><input type="radio" name="focus" value="3"> <b>Question 3:</b> What can people do to manage fear without trying to remove it?</label></div>${field('Why did your group choose this question?','We chose question... because...')}`;
+if(id==='story')content=`<h2>📖 TEXT A · THE LAST LIGHT</h2><p class="muted">Read the whole story. Annotate while reading: ! important detail · ? question · → cause, effect or connection.</p><div class="reading">${texts.A}</div>${field('Group discussion: What is the problem? What TWO actions does Sami take? Add paragraph numbers or short evidence.','The problem is... Sami helps by... and... Evidence: ...')}
+`;
+if(id==='meaning')content=`<h2>🔍 Make meaning & vocabulary detective</h2><p><b>THEME:</b> What lesson about fear does Sami’s experience suggest?</p><p><b>CHARACTER:</b> How does Sami respond even though he is still afraid?</p><p><b>POINT OF VIEW:</b> Which detail reveals Sami’s private thoughts or feelings?</p><hr><p>Infer the meanings of: <b>blurred · shallow · flicker · steadied · disappointment</b>.</p><span class="tag">Support: use simple meanings · Challenge: explain the context clue</span>${field('Write your answers and the context clue for at least one word.','Theme: ...\\nCharacter: ...\\nPoint of view: ...\\nblurred = ...\\nshallow = ...\\nflicker = ...\\nsteadied = ...\\ndisappointment = ...')}`;
+if(id==='article')content=`<h2>🧠 TEXT B · TRAINING THE BRAIN TO STAY CALM</h2><p class="muted">Read the full informational text. Annotate with ! ? → and notice the roles of the amygdala and prefrontal cortex.</p><div class="reading">${texts.B}</div>${field('What is the central idea? What does the amygdala do? What does the prefrontal cortex help people do?','The central idea is... The amygdala... The prefrontal cortex...')}`;
+if(id==='connect')content=`<h2>🔗 Connect the two texts & read between the lines</h2><p>How does the article help explain what Sami does in the story?</p><p><b>Central idea:</b> What does the author want readers to understand about managing fear?</p><p><b>Text structure:</b> How do paragraphs 2 and 3 explain the roles of the amygdala and prefrontal cortex?</p><p><b>Evidence:</b> Which example shows that practice can help someone respond more calmly?</p>${field('Use evidence from both texts.','Text A shows... Text B explains... This connects because...')}`;
+if(id==='choice')content=`<h2>🎨 Choose your differentiated group task</h2><p>Choose ONE task. All options use evidence from both texts.</p><div class="choice-grid"><div class="question"><b>🗺️ A · Visual thinker</b><br>Create a two-text evidence map: Sami’s challenge, two actions, one brain region and its role, one strategy, and a final connection.<br><span class="tag">Support: 4 labelled boxes</span></div><div class="question"><b>✍️ B · Writer</b><br>Write a 5–6 sentence advice message to a student nervous before a presentation. Include two helpful actions, one example from Text A and one fact from Text B.</div><div class="question"><b>🎙️ C · Critical thinker</b><br>Write a mini interview with 3 questions and 3 answers for Sami and a brain researcher. Include at least 3 accurate details.</div></div><div class="field"><label>Select your group task</label><select id="taskChoice"><option>A — Two-text evidence map</option><option>B — Advice message</option><option>C — Mini interview</option></select></div>${field('Type or describe your group’s completed work.','Our group chose... Our evidence is... Our conclusion is...')}`;
+if(id==='final')content=`<h2>🌟 Exit ticket & reading quiz</h2><p><b>Exit ticket:</b> What is ONE important thing these texts teach us about fear? Write 2–3 sentences. Challenge: use evidence from BOTH texts.</p>${field('Exit ticket response','Both texts suggest that...')}
+<div class="question"><h3>📝 Attached Reading Quiz · 12 marks</h3><p>Complete all ten questions. The eight multiple-choice questions are marked automatically. Questions 5 and 10 are written responses for teacher review.</p><div class="tag">Part 1 · Literary reading</div><p><b>Text A: The Last Light</b></p>${quiz.slice(0,4).map((q,i)=>mcq(q,i+1)).join('')}<div class="question"><p>5. What message does the story communicate about dealing with fear? Explain how TWO details from the story develop this message. (2 marks)</p><textarea id="short5" placeholder="The story suggests that... One detail is... Another detail is..."></textarea></div><div class="tag">Part 2 · Informational reading</div><p><b>Text B: Training the Brain to Stay Calm</b></p>${quiz.slice(4).map((q,i)=>mcq(q,i+6)).join('')}<div class="question"><p>10. The author explains that managing fear does not mean becoming fearless. Explain what this means and support your explanation with ONE detail from the article. (2 marks)</p><textarea id="short10" placeholder="This means... The article explains..."></textarea></div></div>`;
+p.innerHTML=`<div class="activity-head"><div><span class="tag">STEP ${idx+1} OF 9 · GROUP ${Number(currentGroup)+1}</span><h2>${def.title}</h2><p class="muted">${def.desc}</p></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn gold" title="Teacher: view all group responses for this activity" onclick="showActivityResponses('${id}')">👩‍🏫 View groups</button><div class="timer" id="timerClock">05:00</div></div></div><div id="timerWarning"></div><div class="question"><b>👥 Your group:</b> ${group.map(n=>esc(n)).join(' · ')}</div>${content}<div class="row"><button class="btn primary" onclick="submitStep('${id}')">Submit & continue →</button><button class="btn" onclick="openStep('${id}')">Restart 5-minute timer</button></div><div id="activityFeedback"></div>`;
+const savedDraft=(data.responses[studentKey()]?.drafts||{})[id]||'';
+const answerBox=document.getElementById('answerBox');
+if(answerBox && typeof savedDraft==='string')answerBox.value=savedDraft;
+startTimer();p.scrollIntoView({behavior:'smooth',block:'start'})}
+function saveGroupDraft(){
+ const box=document.getElementById('answerBox');
+ if(!box||!currentClass||currentGroup==='')return;
+ const r=response();r.drafts=r.drafts||{};
+ const active=document.querySelector('#activityPanel .tag')?.textContent||'';
+ const match=active.match(/STEP\s+(\d+)/);
+ const id=match?activityDefs[Number(match[1])-1]?.id:null;
+ if(!id)return;
+ r.drafts[id]=box.value;
+ r.lastEdited=new Date().toLocaleString();
+ save();
+}
+function showActivityResponses(id){
+ const title=activityDefs.find(d=>d.id===id)?.title||id;
+ const groups=data.groups[currentClass]||[];
+ const cards=groups.map((members,i)=>{
+  const entry=data.responses[currentClass+'|group-'+i];
+  const submitted=entry?.activities?.[id];
+  const draft=entry?.drafts?.[id];
+  const value=submitted?(typeof submitted.answer==='string'?submitted.answer:JSON.stringify(submitted.answer)):draft;
+  return `<div class="question"><b>👥 Group ${i+1}</b><div class="small">${members.map(esc).join(' · ')}</div><p>${value?esc(value).replace(/\n/g,'<br>'):'<i>No draft or submitted response yet.</i>'}</p><span class="tag">${submitted?'Submitted':'Draft / in progress'}</span>${entry?.lastEdited?`<div class="small">Last edited: ${esc(entry.lastEdited)}</div>`:''}</div>`;
+ }).join('');
+ let modal=document.getElementById('teacherActivityModal');
+ if(!modal){modal=document.createElement('div');modal.id='teacherActivityModal';modal.style.cssText='position:fixed;inset:0;background:#071a2dcc;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';document.body.appendChild(modal)}
+ modal.innerHTML=`<div style="background:white;border-radius:18px;max-width:850px;width:100%;max-height:88vh;overflow:auto;padding:22px"><div class="row"><div><span class="tag">TEACHER VIEW · GRADE ${esc(currentClass)}</span><h2>${esc(title)}</h2><p class="small">Responses and live drafts from every group in this class.</p></div><button class="btn" onclick="document.getElementById('teacherActivityModal').remove()">✕ Close</button></div>${cards||'<p>No groups have been formed yet.</p>'}<p class="small">This view refreshes when this browser receives a saved update. For students on separate devices, a shared online database is required.</p></div>`;
+}
+window.addEventListener('storage',ev=>{
+ if(ev.key!=='anjalReadingHub'||!ev.newValue)return;
+ try{
+  const latest=JSON.parse(ev.newValue);
+  data=latest;
+  if(currentClass&&currentGroup!==''){
+   renderSteps();
+   const modal=document.getElementById('teacherActivityModal');
+   if(modal){const title=modal.querySelector('h2')?.textContent;const def=activityDefs.find(d=>d.title===title);if(def)showActivityResponses(def.id)}
+  }
+  if(!document.getElementById('teacherPage').classList.contains('hidden'))renderTeacher();
+ }catch(e){}
+});
+function mcq(q,n){return `<div class="question"><p>${n}. ${q.q}</p>${q.o.map((o,i)=>`<label class="member"><input type="radio" name="q${n}" value="${i}" style="width:auto"> ${String.fromCharCode(65+i)}. ${o}</label>`).join('')}</div>`}
+function submitStep(id){let answer='';if(id==='final'){let score=0,answers={};quiz.forEach((q,i)=>{let el=document.querySelector('input[name="q'+(i+1)+'"]:checked');answers[i+1]=el?Number(el.value):null;if(el&&Number(el.value)===q.a)score++});answers[5]=document.getElementById('short5')?.value.trim()||'';answers[10]=document.getElementById('short10')?.value.trim()||'';let exit=document.getElementById('answerBox')?.value.trim()||'';answer={exitTicket:exit,quizAnswers:answers,autoScore:score};response().quiz={answers,autoScore:score,at:new Date().toLocaleString()};}
+else {let box=document.getElementById('answerBox');if(box)answer=box.value.trim();if(id==='question'){answer={choice:document.querySelector('input[name="focus"]:checked')?.value||'1',reason:answer}}if(id==='choice'){answer={task:document.getElementById('taskChoice').value,work:answer}}}
+if(!answer||(typeof answer==='string'&&!answer.trim())){document.getElementById('activityFeedback').innerHTML='<div class="feedback bad">Please type your response before submitting.</div>';return}
+let r=response();r.group=currentGroup;r.activities[id]={answer,at:new Date().toLocaleString()};save();stopTimer();let next=activityDefs.findIndex(d=>!r.activities[d.id]);renderSteps();renderTeacher();
+if(id==='final'){let score=r.quiz?.autoScore??0;document.getElementById('activityFeedback').innerHTML=`<div class="feedback">🎉 Submitted! Your multiple-choice score is ${score}/8. Your written answers are ready for teacher review. Thank you for completing the reading journey.</div>`;return}
+document.getElementById('activityFeedback').innerHTML='<div class="feedback">😊 Excellent work! Your response is saved. Opening the next step…</div>';setTimeout(()=>{if(next>=0)openStep(activityDefs[next].id);},1100)}
+function saveRosters(){['10A','10C','11A','12A'].forEach(c=>{let el=document.getElementById('roster_'+c);data.rosters[c]=el.value.split('\n').map(x=>x.trim()).filter(Boolean);delete data.groups[c];delete data.groupVersion[c]});save();document.getElementById('rosterMsg').textContent=' Class lists saved. Random groups have been refreshed.';renderTeacher()}
+function renderTeacher(){let classes=['10A','10C','11A','12A'],roster=classes.flatMap(c=>(data.rosters[c]||[]).map(n=>({c,n}))),entries=Object.values(data.responses||{});document.getElementById('totalStudents').textContent=roster.length;document.getElementById('submittedCount').textContent=entries.filter(e=>Object.keys(e.activities||{}).length).length;document.getElementById('pendingCount').textContent=Math.max(0,roster.length-entries.filter(e=>Object.keys(e.activities||{}).length).length);document.getElementById('quizCount').textContent=entries.filter(e=>e.quiz).length;
+document.getElementById('rosterEditors').innerHTML=classes.map(c=>`<div><label><b>Grade ${c}</b></label><textarea id="roster_${c}" rows="8">${esc((data.rosters[c]||[]).join('\n'))}</textarea></div>`).join('');
+document.getElementById('participationTable').innerHTML=roster.map(s=>{let e=data.responses[s.c+'|'+s.n],group=e?.group!==undefined?'Group '+(Number(e.group)+1):'—';return `<tr><td>${esc(s.n)}</td><td>${s.c}</td><td>${group}</td>${activityDefs.map(d=>`<td>${e?.activities?.[d.id]?'😊':'😠'}</td>`).join('')}</tr>`}).join('')||'<tr><td colspan="12">No students are listed yet.</td></tr>';
+document.getElementById('teacherResponses').innerHTML=entries.map(e=>`<div class="question"><b>${esc(e.student)} · Grade ${esc(e.class)} · Group ${Number(e.group??0)+1}</b><div class="small">${Object.keys(e.activities||{}).length}/9 steps submitted</div>${Object.entries(e.activities||{}).map(([id,v])=>`<p><b>${esc(activityDefs.find(x=>x.id===id)?.title||id)}</b><br>${esc(typeof v.answer==='string'?v.answer:JSON.stringify(v.answer))}<br><span class="small">${esc(v.at||'')}</span></p>`).join('')}<div class="field"><label>Teacher feedback</label><textarea id="fb_${safeId(e.class+'|'+e.student)}">${esc(data.feedback[e.class+'|'+e.student]||'')}</textarea></div><button class="btn primary" onclick="saveFeedback('${encodeURIComponent(e.class)}','${encodeURIComponent(e.student)}')">Save feedback</button></div>`).join('')||'No responses yet.'}
+function safeId(s){return btoa(unescape(encodeURIComponent(s))).replace(/[^a-z0-9]/gi,'')}
+function saveFeedback(c,n){let k=decodeURIComponent(c)+'|'+decodeURIComponent(n);data.feedback[k]=document.getElementById('fb_'+safeId(k)).value;save();alert('Teacher feedback saved in this browser.')}
+function exportReport(){let rows=[['Class','Student','Group','Step 1','Step 2','Step 3','Step 4','Step 5','Step 6','Step 7','Step 8','Step 9','Quiz MC score','Responses']];['10A','10C','11A','12A'].forEach(c=>(data.rosters[c]||[]).forEach(n=>{let e=data.responses[c+'|'+n];rows.push([c,n,e?.group!==undefined?'Group '+(Number(e.group)+1):'',...activityDefs.map(d=>e?.activities?.[d.id]?'Submitted':'Missing'),e?.quiz?e.quiz.autoScore+'/8':'',e?Object.entries(e.activities||{}).map(([k,v])=>k+': '+JSON.stringify(v.answer)).join(' | '):''])}));let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Al_Anjal_Reading_Session_Report.csv';a.click()}
+</script>
+
+<script>
+/* AL-ANJAL LIVE CLASSROOM CONNECTION
+   Public project URL + publishable key only. Never place a service-role key here. */
+const SUPABASE_URL = 'https://uobzjuwdtpkfvuwkvvua.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_1VQvlTU503Pn_ngfPW18Ag_gptSSFhm';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+});
+let liveUser = null, liveGroupId = null, liveGroupNumber = null, liveChannel = null;
+let liveSaveTimer = null, teacherMode = false, liveResponses = {};
+
+function addLiveStyles(){
+ const st=document.createElement('style');
+ st.textContent=`
+ #liveJoinPanel{background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #cbdcf5;border-radius:22px;padding:22px;margin:18px 0}
+ #liveJoinPanel h2{margin-bottom:8px}
+ .live-pill{display:inline-flex;align-items:center;gap:7px;border-radius:99px;background:#dcfce7;color:#166534;padding:7px 12px;font-weight:800;font-size:13px}
+ .live-dot{width:9px;height:9px;border-radius:50%;background:#16a34a;display:inline-block}
+ #teacherLoginPanel{margin-top:16px}
+ .live-status{font-size:14px;color:#52627a;margin-top:9px;min-height:22px}
+ .live-response-card{background:white;border:1px solid #dbe4f2;border-radius:16px;padding:16px;margin:12px 0}
+ .live-response-card pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;margin:8px 0}
+ .live-dashboard-head{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+ .live-group-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+ .live-activity{border:1px solid #e2e8f0;border-radius:13px;padding:12px;margin-top:10px;background:#f8fbff}
+ .live-activity textarea{min-height:75px}
+ @media(max-width:650px){#liveJoinPanel{padding:16px}}
+ `;
+ document.head.appendChild(st);
+}
+function liveStatus(msg, bad=false){
+ let el=document.getElementById('liveStatus');
+ if(el){el.textContent=msg;el.style.color=bad?'#b42335':'#52627a';}
+}
+function injectLiveEntry(){
+ addLiveStyles();
+ const cover=document.getElementById('cover');
+ const panel=document.createElement('div');
+ panel.id='teacherLoginPanel';
+ panel.className='panel';
+ panel.innerHTML=`
+  <div class="row"><div><span class="tag">TEACHER ACCESS</span><h3>👩‍🏫 Teacher Dashboard</h3>
+  <p class="muted">Sign in to monitor every class and group in real time.</p></div></div>
+  <div class="row">
+   <div class="field"><label for="teacherEmail">Teacher email</label><input id="teacherEmail" type="email" autocomplete="username" placeholder="Your teacher email"></div>
+   <div class="field"><label for="teacherPassword">Password</label><input id="teacherPassword" type="password" autocomplete="current-password" placeholder="Your Supabase password"></div>
+  </div>
+  <div class="row"><button class="btn primary" onclick="teacherSignIn()">Open Teacher Dashboard</button><span id="teacherLoginStatus" class="live-status"></span></div>`;
+ cover.appendChild(panel);
+ const grade12Button=[...cover.querySelectorAll('.class-card')].find(b=>(b.getAttribute('onclick')||'').includes('12A'));
+ if(grade12Button){grade12Button.disabled=true;grade12Button.style.opacity='.48';grade12Button.style.cursor='not-allowed';grade12Button.querySelector('small').textContent='Grade 12 A · Not configured yet';}
+
+ const classPage=document.getElementById('classPage');
+ const home=document.getElementById('sessionHome');
+ const join=document.createElement('div');
+ join.id='liveJoinPanel';
+ join.innerHTML=`
+  <span class="live-pill"><span class="live-dot"></span> LIVE CLASSROOM ACCESS</span>
+  <h2>Join your assigned group</h2>
+  <p class="muted">Enter your registered name and your personal six-digit PIN. Your group will be assigned automatically.</p>
+  <div class="row">
+   <div class="field"><label for="liveStudentName">Student full name</label><input id="liveStudentName" autocomplete="name" placeholder="Enter your full name"></div>
+   <div class="field"><label for="liveStudentPin">Personal access PIN</label><input id="liveStudentPin" inputmode="numeric" maxlength="6" placeholder="6-digit PIN"></div>
+  </div>
+  <div class="row"><button class="btn primary" onclick="studentJoin()">Join my group</button><span id="liveStatus" class="live-status"></span></div>
+  <p class="small">Your PIN is private. Do not share it with classmates.</p>`;
+ home.insertBefore(join,home.firstChild);
+ // Hide the legacy browser-only group chooser and roster editor.
+ const oldGroupPanel=[...home.querySelectorAll('.panel')].find(x=>x.querySelector('#groupsGrid'));
+ if(oldGroupPanel)oldGroupPanel.classList.add('hidden');
+ const oldTeacherNote=[...document.querySelectorAll('#teacherPage .panel')].find(x=>x.textContent.includes('browser-based prototype'));
+ if(oldTeacherNote)oldTeacherNote.classList.add('hidden');
+}
+function showClassRoom(c){
+ currentClass=c; currentStudent=''; currentGroup='';
+ teacherMode=false; liveGroupId=null; liveGroupNumber=null;
+ document.getElementById('cover').classList.add('hidden');
+ document.getElementById('teacherPage').classList.add('hidden');
+ document.getElementById('classPage').classList.remove('hidden');
+ document.getElementById('classBadge').textContent='GRADE '+c;
+ document.getElementById('classTitle').textContent='Grade '+c+' · Live Reading Room';
+ document.getElementById('sessionHome').classList.remove('hidden');
+ document.getElementById('stepsArea').classList.add('hidden');
+ document.getElementById('activityPanel').classList.add('hidden');
+ document.getElementById('liveJoinPanel').classList.remove('hidden');
+ document.getElementById('liveStudentName').value='';
+ document.getElementById('liveStudentPin').value='';
+ liveStatus('Enter your name and PIN to join your assigned group.');
+ document.getElementById('sessionHome').scrollIntoView({behavior:'smooth'});
+}
+window.selectClass=showClassRoom;
+window.backCover=function(){
+ stopTimer(); if(liveChannel){sb.removeChannel(liveChannel);liveChannel=null;}
+ liveGroupId=null;liveGroupNumber=null;liveUser=null;
+ document.getElementById('classPage').classList.add('hidden');
+ document.getElementById('teacherPage').classList.add('hidden');
+ document.getElementById('cover').classList.remove('hidden');
+};
+async function ensureAnonymousUser(){
+ const {data:{session}}=await sb.auth.getSession();
+ if(session?.user){liveUser=session.user;return session.user;}
+ const {data,error}=await sb.auth.signInAnonymously();
+ if(error)throw error;
+ liveUser=data.user;
+ return data.user;
+}
+async function studentJoin(){
+ const name=document.getElementById('liveStudentName').value.trim();
+ const pin=document.getElementById('liveStudentPin').value.trim();
+ if(!name||!/^\d{6}$/.test(pin)){liveStatus('Enter your full name and a valid six-digit PIN.',true);return;}
+ try{
+  liveStatus('Connecting securely…');
+  const user=await ensureAnonymousUser();
+  const {data,error}=await sb.rpc('join_class_group',{p_class_code:currentClass,p_student_name:name,p_pin:pin});
+  if(error)throw error;
+  const joined=Array.isArray(data)?data[0]:data;
+  if(!joined?.group_id)throw new Error('The enrollment service did not return a group. Please contact your teacher.');
+  liveGroupId=joined.group_id;liveGroupNumber=Number(joined.group_number);currentStudent=joined.student_name;
+  currentGroup=String(liveGroupNumber-1);
+  const {data:members,error:memberError}=await sb.from('group_members').select('student_name').eq('group_id',liveGroupId).order('student_name');
+  if(memberError)throw memberError;
+  data.groups[currentClass]=[];
+  const {data:groups,error:groupsError}=await sb.from('class_groups').select('id,group_number').eq('class_code',currentClass).order('group_number');
+  if(groupsError)throw groupsError;
+  const {data:allMembers,error:allMembersError}=await sb.from('group_members').select('group_id,student_name');
+  if(allMembersError)throw allMembersError;
+  data.groups[currentClass]=groups.map(g=>allMembers.filter(m=>m.group_id===g.id).map(m=>m.student_name));
+  const {data:work,error:workError}=await sb.from('activity_work').select('*').eq('group_id',liveGroupId);
+  if(workError)throw workError;
+  hydrateRemoteWork(work||[]);
+  const memberNames=(members||[]).map(m=>m.student_name);
+  document.getElementById('myGroupNames').innerHTML='<b>👥 Group '+liveGroupNumber+' · Members</b>'+memberNames.map(n=>`<div class="member">${esc(n)}</div>`).join('')+'<p class="small">Your shared workspace is live. Every group member can see the same saved work.</p>';
+  document.getElementById('liveJoinPanel').classList.add('hidden');
+  document.getElementById('stepsArea').classList.remove('hidden');
+  document.getElementById('stepsArea').scrollIntoView({behavior:'smooth'});
+  renderSteps();
+  subscribeGroup();
+  liveStatus(''); 
+ }catch(err){liveStatus(err.message||'Unable to join. Check your details and try again.',true);}
+}
+function remoteKey(){return currentClass+'|group-'+currentGroup;}
+function hydrateRemoteWork(rows){
+ const key=remoteKey();
+ const entry={class:currentClass,student:'Group '+liveGroupNumber,group:currentGroup,activities:{},drafts:{},quiz:null};
+ rows.forEach(row=>{
+   const a=row.draft||{};
+   if(row.submitted){entry.activities[row.activity_id]={answer:a.answer??a,at:row.updated_at};}
+   else {entry.drafts[row.activity_id]=typeof a.answer==='string'?a.answer:(a.answer?JSON.stringify(a.answer):'');}
+   if(row.activity_id==='final'&&a.quiz){entry.quiz=a.quiz;}
+ });
+ data.responses[key]=entry;
+ save();
+}
+function syncRemoteRow(row){
+ const a=row.draft||{};
+ const key=remoteKey(); let e=data.responses[key]||{class:currentClass,student:'Group '+liveGroupNumber,group:currentGroup,activities:{},drafts:{}};
+ if(row.submitted){e.activities[row.activity_id]={answer:a.answer??a,at:row.updated_at};}
+ else {e.drafts[row.activity_id]=typeof a.answer==='string'?a.answer:JSON.stringify(a.answer??'');}
+ if(row.activity_id==='final'&&a.quiz)e.quiz=a.quiz;
+ data.responses[key]=e; save();
+}
+function subscribeGroup(){
+ if(liveChannel)sb.removeChannel(liveChannel);
+ liveChannel=sb.channel('student-group-'+liveGroupId)
+ .on('postgres_changes',{event:'*',schema:'public',table:'activity_work',filter:'group_id=eq.'+liveGroupId},payload=>{
+   if(payload.new){syncRemoteRow(payload.new);
+    const active=document.getElementById('answerBox');
+    const stepTag=document.querySelector('#activityPanel .activity-head .tag')?.textContent||'';
+    const m=stepTag.match(/STEP\s+(\d+)/); const id=m?activityDefs[Number(m[1])-1]?.id:null;
+    if(active && id===payload.new.activity_id && document.activeElement!==active){
+      const val=payload.new.draft?.answer;
+      if(typeof val==='string')active.value=val;
+    }
+    if(!document.getElementById('activityPanel').classList.contains('hidden'))renderSteps();
+   }
+ }).subscribe();
+}
+window.studentKey=remoteKey;
+window.response=function(){
+ const key=remoteKey();
+ return data.responses[key]||(data.responses[key]={class:currentClass,student:'Group '+(Number(currentGroup)+1),group:currentGroup,activities:{},drafts:{},quiz:null});
+};
+window.saveGroupDraft=function(){
+ const box=document.getElementById('answerBox'); if(!box||!liveGroupId||!liveUser)return;
+ const tag=document.querySelector('#activityPanel .activity-head .tag')?.textContent||'';
+ const m=tag.match(/STEP\s+(\d+)/);const id=m?activityDefs[Number(m[1])-1]?.id:null;if(!id)return;
+ const r=response();r.drafts=r.drafts||{};r.drafts[id]=box.value;save();
+ clearTimeout(liveSaveTimer);
+ liveSaveTimer=setTimeout(async()=>{
+   try{
+    const {error}=await sb.from('activity_work').upsert({
+      group_id:liveGroupId,activity_id:id,draft:{answer:box.value},submitted:false,updated_by:liveUser.id,updated_at:new Date().toISOString()
+    },{onConflict:'group_id,activity_id'});
+    if(error)throw error;
+    liveStatus('All changes saved and shared live.');
+   }catch(e){liveStatus('Save issue: '+e.message,true);}
+ },450);
+};
+const originalOpenStep=window.openStep;
+window.openStep=function(id){
+ if(!liveGroupId){liveStatus('Please join your group first.',true);return;}
+ originalOpenStep(id);
+ const teacherOnlyBtn=document.querySelector('#activityPanel .activity-head button[onclick*="showActivityResponses"]');
+ if(teacherOnlyBtn)teacherOnlyBtn.remove();
+ const e=response();const saved=e.drafts?.[id];
+ const box=document.getElementById('answerBox');
+ if(box&&typeof saved==='string')box.value=saved;
+};
+const originalSubmitStep=window.submitStep;
+window.submitStep=async function(id){
+ if(!liveGroupId||!liveUser){liveStatus('Please join your group first.',true);return;}
+ originalSubmitStep(id);
+ const r=response(); const record=r.activities?.[id];
+ if(!record)return;
+ try{
+   const payload={answer:record.answer};
+   if(id==='final')payload.quiz=r.quiz||null;
+   const {error}=await sb.from('activity_work').upsert({
+     group_id:liveGroupId,activity_id:id,draft:payload,submitted:true,updated_by:liveUser.id,updated_at:new Date().toISOString()
+   },{onConflict:'group_id,activity_id'});
+   if(error)throw error;
+   liveStatus('Your group submission has been saved online.');
+ }catch(e){liveStatus('Submission sync issue: '+e.message,true);}
+};
+window.showActivityResponses=async function(id){
+ const title=activityDefs.find(d=>d.id===id)?.title||id;
+ let groups=data.groups[currentClass]||[];
+ const {data:rows,error}=await sb.from('activity_work').select('*').in('group_id', (await sb.from('class_groups').select('id').eq('class_code',currentClass)).data?.map(g=>g.id)||[]);
+ if(error){alert(error.message);return;}
+ const {data:members}=await sb.from('group_members').select('group_id,student_name');
+ const cards=groups.map((names,i)=>{
+  const row=(rows||[]).find(x=>x.activity_id===id && x.group_id===liveGroupId);
+  const text=row?.draft?.answer;
+  return `<div class="question"><b>👥 Group ${i+1}</b><p>${esc(text?typeof text==='string'?text:JSON.stringify(text):'No response yet.').replace(/\n/g,'<br>')}</p><span class="tag">${row?.submitted?'Submitted':'Draft / in progress'}</span></div>`;
+ }).join('');
+ let modal=document.getElementById('teacherActivityModal');
+ if(!modal){modal=document.createElement('div');modal.id='teacherActivityModal';modal.style.cssText='position:fixed;inset:0;background:#071a2dcc;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';document.body.appendChild(modal);}
+ modal.innerHTML=`<div style="background:white;border-radius:18px;max-width:850px;width:100%;max-height:88vh;overflow:auto;padding:22px"><div class="row"><div><span class="tag">GROUP VIEW · GRADE ${esc(currentClass)}</span><h2>${esc(title)}</h2></div><button class="btn" onclick="document.getElementById('teacherActivityModal').remove()">✕ Close</button></div>${cards}</div>`;
+};
+async function teacherSignIn(){
+ const email=document.getElementById('teacherEmail').value.trim();
+ const password=document.getElementById('teacherPassword').value;
+ const status=document.getElementById('teacherLoginStatus');
+ status.textContent='Signing in…';
+ try{
+  const {data:auth,error}=await sb.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  liveUser=auth.user;
+  const {data:profile,error:profileError}=await sb.from('profiles').select('role,display_name').eq('id',liveUser.id).single();
+  if(profileError)throw profileError;
+  if(profile.role!=='teacher')throw new Error('This account is not assigned the teacher role.');
+  teacherMode=true; await openTeacherDashboard();
+ }catch(e){status.textContent=e.message||'Sign-in failed.';}
+}
+async function openTeacherDashboard(){
+ stopTimer(); if(liveChannel){sb.removeChannel(liveChannel);liveChannel=null;}
+ document.getElementById('cover').classList.add('hidden');
+ document.getElementById('classPage').classList.add('hidden');
+ const page=document.getElementById('teacherPage');page.classList.remove('hidden');
+ page.innerHTML=`
+ <div class="panel">
+  <div class="live-dashboard-head"><div><span class="live-pill"><span class="live-dot"></span> LIVE TEACHER VIEW</span><h2>Al-Anjal · Group Work Monitor</h2><p class="muted">Monitor drafts and submissions from every group across all connected classes.</p></div><button class="btn" onclick="teacherSignOut()">Sign out</button></div>
+  <div class="statgrid"><div class="stat"><b id="liveTotalGroups">0</b><span>Groups</span></div><div class="stat"><b id="liveTotalStudents">0</b><span>Students</span></div><div class="stat"><b id="liveWorkCount">0</b><span>Activities with work</span></div><div class="stat"><b id="liveSubmittedCount">0</b><span>Submitted activities</span></div></div>
+ </div>
+ <div class="panel"><div class="row"><div><h3>Choose a class</h3></div><select id="teacherClassFilter" onchange="renderLiveTeacher()"><option value="ALL">All classes</option><option>10A</option><option>10C</option><option>11A</option></select></div><div id="liveTeacherGroups" class="live-group-grid">Loading group work…</div></div>`;
+ await loadTeacherData();
+ liveChannel=sb.channel('teacher-all-work').on('postgres_changes',{event:'*',schema:'public',table:'activity_work'},async()=>{await loadTeacherData();}).subscribe();
+}
+let teacherCache={groups:[],members:[],work:[]};
+async function loadTeacherData(){
+ const [g,m,w]=await Promise.all([
+  sb.from('class_groups').select('id,class_code,group_number').order('class_code').order('group_number'),
+  sb.from('group_members').select('group_id,student_name'),
+  sb.from('activity_work').select('*').order('updated_at',{ascending:false})
+ ]);
+ const err=g.error||m.error||w.error;if(err){document.getElementById('liveTeacherGroups').textContent='Unable to load dashboard: '+err.message;return;}
+ teacherCache={groups:g.data||[],members:m.data||[],work:w.data||[]};
+ renderLiveTeacher();
+}
+function renderLiveTeacher(){
+ if(!document.getElementById('liveTeacherGroups'))return;
+ const filter=document.getElementById('teacherClassFilter')?.value||'ALL';
+ const groups=teacherCache.groups.filter(g=>filter==='ALL'||g.class_code===filter);
+ const members=teacherCache.members;
+ const work=teacherCache.work;
+ const studentCount=groups.reduce((n,g)=>n+members.filter(m=>m.group_id===g.id).length,0);
+ document.getElementById('liveTotalGroups').textContent=groups.length;
+ document.getElementById('liveTotalStudents').textContent=studentCount;
+ document.getElementById('liveWorkCount').textContent=work.filter(w=>groups.some(g=>g.id===w.group_id)).length;
+ document.getElementById('liveSubmittedCount').textContent=work.filter(w=>w.submitted&&groups.some(g=>g.id===w.group_id)).length;
+ document.getElementById('liveTeacherGroups').innerHTML=groups.map(g=>{
+  const ms=members.filter(m=>m.group_id===g.id);
+  const rows=work.filter(w=>w.group_id===g.id);
+  return `<div class="live-response-card"><div class="live-dashboard-head"><div><span class="tag">GRADE ${g.class_code}</span><h3>👥 Group ${g.group_number}</h3></div><b>${ms.length} students</b></div>
+   <div class="small">${ms.map(m=>esc(m.student_name)).join(' · ')||'No students enrolled yet'}</div>
+   ${activityDefs.map(d=>{const row=rows.find(w=>w.activity_id===d.id);const answer=row?.draft?.answer;return `<div class="live-activity"><b>${d.icon} ${esc(d.title)}</b><span class="tag" style="float:right">${row?(row.submitted?'Submitted':'Working'):'Not started'}</span><pre>${answer?esc(typeof answer==='string'?answer:JSON.stringify(answer,null,2)):'No response yet.'}</pre><div class="small">${row?.updated_at?'Last update: '+new Date(row.updated_at).toLocaleString():''}</div></div>`}).join('')}
+  </div>`;
+ }).join('')||'<p>No groups found for this class.</p>';
+}
+window.renderTeacher=renderLiveTeacher;
+window.teacherSignOut=async function(){
+ if(liveChannel){sb.removeChannel(liveChannel);liveChannel=null;}
+ await sb.auth.signOut();liveUser=null;teacherMode=false;
+ document.getElementById('teacherPage').classList.add('hidden');document.getElementById('cover').classList.remove('hidden');
+};
+window.addEventListener('DOMContentLoaded',async()=>{
+ injectLiveEntry();
+ try{
+  const {data:{session}}=await sb.auth.getSession();
+  if(session?.user){
+   liveUser=session.user;
+   const {data:profile}=await sb.from('profiles').select('role').eq('id',liveUser.id).maybeSingle();
+   if(profile?.role==='teacher'){document.getElementById('teacherEmail').value=liveUser.email||'';}
+   else {
+    const {data:membership}=await sb.from('group_members').select('group_id,user_id').eq('user_id',liveUser.id).maybeSingle();
+    if(membership){
+      const {data:g}=await sb.from('class_groups').select('class_code,group_number').eq('id',membership.group_id).single();
+      if(g){currentClass=g.class_code;showClassRoom(g.class_code);liveGroupId=membership.group_id;liveGroupNumber=g.group_number;
+       const {data:mem}=await sb.from('group_members').select('student_name').eq('group_id',liveGroupId).order('student_name');
+       const {data:allg}=await sb.from('class_groups').select('id,group_number').eq('class_code',currentClass).order('group_number');
+       const {data:allm}=await sb.from('group_members').select('group_id,student_name');
+       data.groups[currentClass]=(allg||[]).map(x=>(allm||[]).filter(y=>y.group_id===x.id).map(y=>y.student_name));
+       const {data:rows}=await sb.from('activity_work').select('*').eq('group_id',liveGroupId);hydrateRemoteWork(rows||[]);
+       document.getElementById('liveJoinPanel').classList.add('hidden');document.getElementById('stepsArea').classList.remove('hidden');
+       document.getElementById('myGroupNames').innerHTML='<b>👥 Group '+g.group_number+' · Members</b>'+(mem||[]).map(x=>`<div class="member">${esc(x.student_name)}</div>`).join('');
+       renderSteps();subscribeGroup();
+      }
+    }
+   }
+  }
+ }catch(e){console.warn('Live classroom restore:',e.message);}
+});
+</script>
+
+</body></html>
