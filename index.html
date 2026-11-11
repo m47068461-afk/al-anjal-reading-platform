@@ -376,7 +376,8 @@ function injectLiveEntry(){
    <div class="field"><label for="teacherEmail">Teacher email</label><input id="teacherEmail" type="email" autocomplete="username" placeholder="Your teacher email"></div>
    <div class="field"><label for="teacherPassword">Password</label><input id="teacherPassword" type="password" autocomplete="current-password" placeholder="Your Supabase password"></div>
   </div>
-  <div class="row"><button class="btn primary" onclick="teacherSignIn()">Open Teacher Dashboard</button><span id="teacherLoginStatus" class="live-status"></span></div>`;
+  <div class="row"><button class="btn primary" onclick="teacherSignIn()">Open Teacher Dashboard</button><button class="btn" type="button" onclick="sendTeacherPasswordReset()">Forgot password?</button><span id="teacherLoginStatus" class="live-status"></span></div>
+  <div class="small">Use your teacher email and the password you set in Supabase.</div>`;
  cover.appendChild(panel);
  const grade12Button=[...cover.querySelectorAll('.class-card')].find(b=>(b.getAttribute('onclick')||'').includes('12A'));
  if(grade12Button){grade12Button.disabled=true;grade12Button.style.opacity='.48';grade12Button.style.cursor='not-allowed';grade12Button.querySelector('small').textContent='Grade 12 A · Not configured yet';}
@@ -568,6 +569,55 @@ window.showActivityResponses=async function(id){
  if(!modal){modal=document.createElement('div');modal.id='teacherActivityModal';modal.style.cssText='position:fixed;inset:0;background:#071a2dcc;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';document.body.appendChild(modal);}
  modal.innerHTML=`<div style="background:white;border-radius:18px;max-width:850px;width:100%;max-height:88vh;overflow:auto;padding:22px"><div class="row"><div><span class="tag">GROUP VIEW · GRADE ${esc(currentClass)}</span><h2>${esc(title)}</h2></div><button class="btn" onclick="document.getElementById('teacherActivityModal').remove()">✕ Close</button></div>${cards}</div>`;
 };
+
+async function sendTeacherPasswordReset(){
+ const email=(document.getElementById('teacherEmail').value||'').trim();
+ const status=document.getElementById('teacherLoginStatus');
+ if(!email){status.textContent='Enter your teacher email first.';return;}
+ status.textContent='Sending a secure password-reset email…';
+ try{
+  const redirectTo='https://m47068461-afk.github.io/al-anjal-reading-platform/';
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo});
+  if(error)throw error;
+  status.textContent='If the account exists, a reset email has been sent. Open its link on this same website.';
+ }catch(e){status.textContent='Reset request failed: '+e.message;}
+}
+function showPasswordRecoveryForm(){
+ let modal=document.getElementById('passwordRecoveryModal');
+ if(modal)return;
+ modal=document.createElement('div');
+ modal.id='passwordRecoveryModal';
+ modal.style.cssText='position:fixed;inset:0;background:#071a2ddd;z-index:10050;display:flex;align-items:center;justify-content:center;padding:18px';
+ modal.innerHTML=`<div style="background:white;color:#213247;border-radius:20px;padding:26px;max-width:440px;width:100%;box-shadow:0 20px 70px #0005">
+  <span class="tag">SECURE TEACHER ACCOUNT</span><h2 style="margin:12px 0 6px">Create a new password</h2>
+  <p style="color:#63758b">Your recovery link is accepted. Choose a new password for your teacher account.</p>
+  <label for="recoveryNewPassword">New password</label><input id="recoveryNewPassword" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:7px 0 14px">
+  <label for="recoveryConfirmPassword">Confirm new password</label><input id="recoveryConfirmPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Type it again" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:7px 0 14px">
+  <button id="saveRecoveredPassword" class="btn primary" style="width:100%" onclick="saveRecoveredTeacherPassword()">Save new password</button>
+  <p id="recoveryMessage" class="live-status"></p>
+ </div>`;
+ document.body.appendChild(modal);
+}
+async function saveRecoveredTeacherPassword(){
+ const p=document.getElementById('recoveryNewPassword').value;
+ const c=document.getElementById('recoveryConfirmPassword').value;
+ const msg=document.getElementById('recoveryMessage');
+ if(p.length<8){msg.textContent='Use at least 8 characters.';return;}
+ if(p!==c){msg.textContent='The passwords do not match.';return;}
+ const btn=document.getElementById('saveRecoveredPassword');btn.disabled=true;btn.textContent='Saving…';
+ try{
+  const {error}=await sb.auth.updateUser({password:p});
+  if(error)throw error;
+  msg.textContent='Password updated successfully. You can now open the teacher dashboard.';
+  setTimeout(()=>{document.getElementById('passwordRecoveryModal')?.remove();document.getElementById('teacherEmail').value='m47068461@gmail.com';document.getElementById('teacherPassword').value=p;},1300);
+ }catch(e){msg.textContent='Could not update password: '+e.message;btn.disabled=false;btn.textContent='Save new password';}
+}
+sb.auth.onAuthStateChange((event)=>{
+ if(event==='PASSWORD_RECOVERY'){
+  setTimeout(showPasswordRecoveryForm,0);
+ }
+});
+
 async function teacherSignIn(){
  const email=document.getElementById('teacherEmail').value.trim();
  const password=document.getElementById('teacherPassword').value;
